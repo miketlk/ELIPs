@@ -44,10 +44,20 @@ The new global proprietary types specific to Hardware Wallet Extensions are as f
 |-
 | Asset Metadata
 | <tt>PSBT_ELEMENTS_HWW_GLOBAL_ASSET_METADATA = 0x00</tt>
-| <tt><32 byte asset tag></tt>
-| A 32 byte asset tag which corresponds to this metadata.
-| <tt><compact size uint contractLen><contract><32-byte prevoutTxid><32-bit little endian uint prevoutIndex></tt>
-| A compact size unsigned integer representing size of the contract in bytes, <tt>contractLen</tt>, is followed with the <tt>contract</tt> itself as a JSON document, canonicalized to have its keys sorted lexicographically. The input of an asset issuance transaction is represented as <tt>prevoutTxid</tt> - a 32-byte previous transaction hash, and <tt>prevoutIndex</tt> - a 32-bit little endian unsigned integer containing a zero-based index of the previous transaction's output.
+| <tt><32-byte asset/token tag></tt>
+| A 32 byte tag of an asset or reissuance token which corresponds to this metadata.
+| <tt><compact size uint assetClass><32-byte contract hash><32-byte prevoutTxid><32-bit little endian uint prevoutIndex></tt>
+| A compact size unsigned integer, <tt>assetClass</tt>, represents the class of an asset or reissuance token whose tag is in the <tt>keydata</tt>. The asset class must be 0x00 for an ordinary asset, 0x01 for a non-confidential reissuance token, and 0x02 for a confidential reissuance token. The asset contract is referenced by the <tt>contract hash</tt>, 32 bytes, given in the same format as used by the asset registry. The input of an asset issuance transaction is represented as <tt>prevoutTxid</tt> - a 32-byte previous transaction hash, and <tt>prevoutIndex</tt> - a 32-bit little endian unsigned integer containing a zero-based index of the previous transaction's output.
+|
+| 0
+| 2
+|-
+| Asset Contract
+| <tt>PSBT_ELEMENTS_HWW_GLOBAL_ASSET_CONTRACT = 0x01</tt>
+| <tt><32-byte contract hash></tt>
+| A 32 byte contract hash in asset registry format.
+| <tt><contract></tt>
+| A Ricardian contract specified by the asset issuer as a JSON document, canonicalized to have its keys sorted lexicographically. The contract should at least contain the asset name, ticker, domain, and precision. The hash of this document must match the one specified in <tt>keydata</tt>.
 |
 | 0
 | 2
